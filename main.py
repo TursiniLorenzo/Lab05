@@ -46,7 +46,6 @@ def main(page: ft.Page):
     lista_auto = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
 
     # Tutti i TextField per le info necessarie per aggiungere una nuova automobile (marca, modello, anno, contatore posti)
-    # TODO
     txt_aggiungi_automobile = ft.Text (value="Aggiungi una nuova automobile:", size=20)
 
     txt_marca = ft.TextField (value=None, label="Marca automobile:")
@@ -90,24 +89,27 @@ def main(page: ft.Page):
         anno = txt_anno.value
         posti = txtOut.value
 
-        if int (anno) >= 0 and int (posti) >= 0 :
-            autonoleggio.aggiungi_automobile(marca, modello, anno, posti)
-            aggiorna_lista_auto()
-            page.update ()
+        if not str (anno).isdigit() : # Controllo che l'anno sia stato inserito in lettere o cifre
+            alert.show_alert("❌ ERRORE: Inserisci valori numerici validi per l'anno.")
+        else :
+            if int(anno) >= 0 and int(posti) >= 0: # Controllo che l'anno e i posti non siano negativi
+
+                autonoleggio.aggiungi_automobile(marca, modello, anno, posti)
+                aggiorna_lista_auto()
+                # In modo che le aree di testo vengano "svuotate" da quello che è stato inserito in precedenza
+                txt_marca.value = None
+                txt_modello.value = None
+                txt_anno.value = None
+                txtOut.value = 0
+                page.update()
 
         else :
             alert.show_alert("❌ ERRORE: Inserisci valori numerici validi per anno e posti.")
-
-    # Handlers per la gestione dei bottoni utili all'inserimento di una nuova auto
-    # TODO
 
     # --- EVENTI ---
     toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=cambia_tema)
     pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=conferma_responsabile)
     pulsante_aggiungi_auto = ft.ElevatedButton("Aggiungi", on_click=aggiungi_automobile)
-
-    # Bottoni per la gestione dell'inserimento di una nuova auto
-    # TODO
 
     # --- LAYOUT ---
     page.add(
@@ -125,7 +127,6 @@ def main(page: ft.Page):
                alignment=ft.MainAxisAlignment.CENTER),
 
         # Sezione 3
-        # TODO
         ft.Divider(),
         txt_aggiungi_automobile,
 
@@ -142,3 +143,4 @@ def main(page: ft.Page):
     aggiorna_lista_auto()
 
 ft.app(target=main)
+
